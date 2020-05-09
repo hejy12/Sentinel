@@ -20,19 +20,21 @@ import com.alibaba.csp.sentinel.node.DefaultNode;
 import com.alibaba.csp.sentinel.slotchain.AbstractLinkedProcessorSlot;
 import com.alibaba.csp.sentinel.slotchain.ProcessorSlot;
 import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
+import com.alibaba.csp.sentinel.spi.SpiOrder;
 
 /**
  * A {@link ProcessorSlot} dedicates to {@link DegradeRule} checking.
  *
  * @author leyou
  */
+@SpiOrder(-1000)
 public class DegradeSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
     @Override
-    public void entry(Context context, ResourceWrapper resourceWrapper, DefaultNode node, int count, Object... args)
+    public void entry(Context context, ResourceWrapper resourceWrapper, DefaultNode node, int count, boolean prioritized, Object... args)
         throws Throwable {
         DegradeRuleManager.checkDegrade(resourceWrapper, context, node, count);
-        fireEntry(context, resourceWrapper, node, count, args);
+        fireEntry(context, resourceWrapper, node, count, prioritized, args);
     }
 
     @Override
